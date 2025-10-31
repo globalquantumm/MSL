@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Price Drop Auction</title>
+    
+    <!-- Google Fonts: Roboto와 MuseoModerno 로드 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=MuseoModerno:wght@600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- 모바일 기본 스타일 --- */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #111;
+            /* 모바일에서는 스크롤 허용 */
+            overflow: auto; 
+            margin: 0;
+            padding: 0;
+        }
+
+        .font-msl {
+            font-family: 'MuseoModerno', sans-serif;
+            font-weight: 600;
+        }
+
+        .aspect-16-9 {
+            position: relative;
+            width: 100%;
+            margin: auto;
+        }
+
+        .content-wrapper {
+            position: relative;
+            width: 100%;
+            min-height: 100vh; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* 모바일에서는 위에서부터 정렬 (깨짐 방지) */
+            justify-content: flex-start; 
+            background: linear-gradient(135deg, #3a0099, #2b007a, #0d004d);
+            color: white;
+            padding: 15vh 8vw; 
+            box-sizing: border-box; 
+        }
+
+        .copyright-text, #playButton {
+            position: relative; 
+            bottom: auto;
+            right: auto;
+            top: auto;
+            margin-top: 2rem; 
+        }
+        
+        .copyright-text {
+            font-size: 0.75rem; 
+            color: #9ca3af; 
+            text-align: center;
+            order: 99; 
+        }
+        
+        #playButton {
+            order: 98; 
+        }
+
+        /* --- '완벽'했던 데스크탑/태블릿 (768px 이상) --- */
+        @media (min-width: 768px) {
+            body {
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+            }
+
+            .aspect-16-9 {
+                position: relative; 
+                width: 100%;
+                padding-bottom: 56.25%; 
+                height: 0; 
+                overflow: hidden; 
+                max-width: 1920px; 
+                margin: auto; 
+            }
+
+            .content-wrapper {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                /* [수정] 중앙 정렬은 유지 */
+                justify-content: center; 
+                /* [수정] 중앙에서 살짝 위로 올림 */
+                margin-top: -5vh; 
+                padding: 4vw; 
+                min-height: auto; 
+            }
+            
+            .copyright-text {
+                position: absolute;
+                bottom: 1.5rem; 
+                font-size: 0.75rem;
+                margin-top: 0;
+            }
+
+            #playButton {
+                position: absolute;
+                top: 1.5rem;
+                right: 1.5rem;
+                margin-top: 0;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-black">
+
+    <!-- 16:9 비율 컨테이너 -->
+    <div class="aspect-16-9">
+        
+        <!-- 콘텐츠 래퍼 -->
+        <div class="content-wrapper">
+
+            <!-- 상단 텍스트 -->
+            <h1 class="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold text-center mb-4 leading-tight">
+                The Next Engine<br>for YouTube
+            </h1>
+            
+            <!-- 3개의 검은색 정보 상자 (데스크탑 여백 my-8) -->
+            <div class="flex flex-col sm:flex-row gap-4 md:gap-8 my-4 md:my-8 w-full sm:w-auto">
+                
+                <!-- Box 1: Starting price -->
+                <div class="bg-black bg-opacity-80 p-6 rounded-2xl text-center w-full sm:min-w-[200px]">
+                    <div id="start-price" class="text-4xl md:text-5xl font-bold text-white mb-2">
+                        $50.0
+                    </div>
+                    <div class="text-lg text-gray-400">
+                        Starting price
+                    </div>
+                </div>
+
+                <!-- Box 2: Participants (증가) -->
+                <div class="bg-black bg-opacity-80 p-6 rounded-2xl text-center w-full sm:min-w-[200px]">
+                    <div id="participants-count" class="text-4xl md:text-5xl font-bold text-white mb-2">
+                        2,789
+                    </div>
+                    <div class="text-lg text-gray-400">
+                        Participants
+                    </div>
+                </div>
+
+                <!-- Box 3: Current price (감소) -->
+                <div class="bg-black bg-opacity-80 p-6 rounded-2xl text-center w-full sm:min-w-[200px]">
+                    <div id="current-price" class="text-4xl md:text-5xl font-bold text-pink-500 mb-2">
+                        $6.79
+                    </div>
+                    <div class="text-lg text-gray-400">
+                        Current price
+                    </div>
+                </div>
+            </div>
+
+            <!-- 부제목 -->
+            <p class="text-xl sm:text-2xl md:text-3xl font-bold text-yellow-400 mb-2">
+                LIVE PRICE DROP AUCTION
+            </p>
+            <!-- 설명 (데스크탑 여백 mb-8) -->
+            <p class="text-sm sm:text-base md:text-lg text-gray-200 mb-8 text-center max-w-2xl">
+                The world's first real-time, participant-based commerce protocol.
+            </p>
+
+            <!-- MSL 로고 (데스크탑 여백 mb-8) -->
+            <div class="font-msl text-4xl sm:text-5xl mb-8">
+                MSL
+            </div>
+
+            <!-- 하단 저작권 텍스트 -->
+            <p class="copyright-text">
+                Confidential & Proprietary. Copyright © 2024 KIM TAEIL. All Rights Reserved.
+            </p>
+
+            <!-- 애니메이션 제어 버튼 -->
+            <button id="playButton" class="bg-white text-blue-600 font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition-all">
+                Start 5s Animation
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 숫자 애니메이션을 위한 헬퍼 함수
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                
+                let currentValue = start + (end - start) * progress;
+                
+                if (obj.id === 'participants-count') {
+                    obj.innerHTML = Math.floor(currentValue).toLocaleString();
+                    if (progress === 1) {
+                        obj.innerHTML = "3,150+";
+                    }
+                } 
+                else if (obj.id === 'current-price') {
+                    obj.innerHTML = `$${currentValue.toFixed(2)}`;
+                }
+                
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        const playButton = document.getElementById('playButton');
+        const participantsElement = document.getElementById('participants-count');
+        const priceElement = document.getElementById('current-price');
+
+        playButton.addEventListener('click', () => {
+            playButton.disabled = true;
+            playButton.textContent = 'Animating...'; 
+            playButton.classList.add('opacity-50', 'cursor-not-allowed');
+
+            participantsElement.innerHTML = "2,789";
+            priceElement.innerHTML = "$6.79";
+
+            animateValue(participantsElement, 2789, 3150, 5000); 
+            animateValue(priceElement, 6.79, 4.90, 5000);   
+
+            setTimeout(() => {
+                playButton.disabled = false;
+                playButton.textContent = 'Play Again'; 
+                playButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            }, 5000);
+        });
+    </script>
+
+</body>
+</html>
